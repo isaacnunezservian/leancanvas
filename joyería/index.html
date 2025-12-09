@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lean Canvas - Joyerías Premium</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: #0f0f23;
+            color: #fff;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Fondo animado con partículas */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(ellipse at center, #1a1a3e 0%, #0f0f23 100%);
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(218, 165, 32, 0.3);
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            50% { transform: translateY(-100px) translateX(100px); opacity: 0.6; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-section {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 100px auto;
+            padding: 60px 40px;
+            background: rgba(30, 30, 60, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(218, 165, 32, 0.3);
+            border-radius: 20px;
+        }
+
+        .text-section h2 {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .text-section p {
+            font-size: 1.15em;
+            line-height: 2;
+            color: #cbd5e0;
+            white-space: pre-wrap;
+            user-select: all;
+        }
+
+        /* Barra de navegación */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            max-width: 600px;
+            justify-content: flex-end;
+        }
+
+        .nav-link {
+            background: rgba(218, 165, 32, 0.9);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1em;
+            border: 2px solid rgba(218, 165, 32, 0.5);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            background: rgba(184, 134, 11, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(218, 165, 32, 0.6);
+        }
+
+        .nav-link.active {
+            background: rgba(184, 134, 11, 0.9);
+            border-color: #b8860b;
+        }
+
+        /* Header épico */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h1 {
+            font-size: 4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #daa520 0%, #b8860b 50%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 40px rgba(218, 165, 32, 0.5);
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            color: #a0aec0;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .deadline {
+            display: inline-block;
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #ef4444;
+            color: #fca5a5;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 1.1em;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        }
+
+        /* Grid mejorado con responsividad */
+        .canvas-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(3, auto);
+            gap: 20px;
+            flex: 1;
+        }
+
+        .canvas-block {
+            background: rgba(30, 30, 60, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(218, 165, 32, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .canvas-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(255, 215, 0, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .canvas-block:hover {
+            transform: scale(1.05) translateY(-5px);
+            border-color: #daa520;
+            box-shadow: 0 20px 60px rgba(218, 165, 32, 0.4);
+        }
+
+        .canvas-block:hover::before {
+            opacity: 1;
+        }
+
+        /* Iconos grandes y llamativos */
+        .block-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            display: block;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .block-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .block-content {
+            color: #cbd5e0;
+            line-height: 1.7;
+            font-size: 1.05em;
+            flex: 1;
+        }
+
+        .metric {
+            display: inline-block;
+            background: linear-gradient(135deg, #daa520, #ffd700);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1.1em;
+            color: #fff;
+            margin: 5px 0;
+            box-shadow: 0 4px 15px rgba(218, 165, 32, 0.4);
+        }
+
+        .star {
+            color: #fbbf24;
+            font-size: 1.5em;
+            filter: drop-shadow(0 0 5px #fbbf24);
+        }
+
+        /* Layout grid específico */
+        .block-problema { grid-column: 1; grid-row: 1; }
+        .block-alternativas { grid-column: 2; grid-row: 1; }
+        .block-solucion { grid-column: 4; grid-row: 1; }
+        .block-propuesta { grid-column: 3; grid-row: 1 / 3; }
+        .block-cliente { grid-column: 5; grid-row: 1; }
+        .block-ventaja { grid-column: 5; grid-row: 2; }
+        .block-canales { grid-column: 1; grid-row: 2; }
+        .block-ingresos { grid-column: 4; grid-row: 2; }
+        .block-costos { grid-column: 1 / 3; grid-row: 3; }
+        .block-metricas { grid-column: 3 / 6; grid-row: 3; }
+
+        /* Animaciones de entrada más dramáticas */
+        .canvas-block {
+            animation: scaleIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        @keyframes scaleIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .canvas-block:nth-child(1) { animation-delay: 0.2s; }
+        .canvas-block:nth-child(2) { animation-delay: 0.4s; }
+        .canvas-block:nth-child(3) { animation-delay: 0.6s; }
+        .canvas-block:nth-child(4) { animation-delay: 0.8s; }
+        .canvas-block:nth-child(5) { animation-delay: 1.0s; }
+        .canvas-block:nth-child(6) { animation-delay: 1.2s; }
+        .canvas-block:nth-child(7) { animation-delay: 1.4s; }
+        .canvas-block:nth-child(8) { animation-delay: 1.6s; }
+        .canvas-block:nth-child(9) { animation-delay: 1.8s; }
+        .canvas-block:nth-child(10) { animation-delay: 2.0s; }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #718096;
+            font-size: 0.95em;
+        }
+
+        .team {
+            display: inline-block;
+            background: rgba(218, 165, 32, 0.2);
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            color: #a0aec0;
+        }
+
+        /* Controles minimalistas */
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            background: rgba(218, 165, 32, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 2px solid rgba(218, 165, 32, 0.5);
+            padding: 12px 12px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            background: rgba(184, 134, 11, 1);
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 10px 30px rgba(218, 165, 32, 0.6);
+        }
+
+        /* Modal de pitch */
+        .pitch-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .pitch-modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .pitch-content {
+            background: linear-gradient(135deg, rgba(30, 30, 60, 0.95), rgba(20, 20, 40, 0.95));
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(218, 165, 32, 0.5);
+            border-radius: 25px;
+            padding: 50px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .pitch-content h2 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #daa520, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pitch-content .pitch-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+            filter: drop-shadow(0 0 20px currentColor);
+        }
+
+        .pitch-content p {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #cbd5e0;
+            margin-bottom: 20px;
+        }
+
+        .pitch-content strong {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .pitch-highlight {
+            background: rgba(218, 165, 32, 0.3);
+            padding: 20px;
+            border-left: 4px solid #daa520;
+            border-radius: 10px;
+            margin: 25px 0;
+            font-size: 1.2em;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #ef4444;
+            color: #fca5a5;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: #ef4444;
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        /* Lista de ítems más visual */
+        .item-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .item-list li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .item-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            h1 { font-size: 3em; }
+            .canvas-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: auto;
+            }
+            .canvas-block {
+                grid-column: auto !important;
+                grid-row: auto !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .subtitle { font-size: 1.1em; }
+            .canvas-grid {
+                grid-template-columns: 1fr;
+            }
+            .canvas-block {
+                padding: 20px;
+            }
+            .block-title {
+                font-size: 1.1em;
+            }
+            .navbar {
+                top: 10px;
+                right: 10px;
+                gap: 10px;
+            }
+            .nav-link {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+            .text-section {
+                padding: 30px 20px;
+                margin: 50px auto;
+            }
+            .pitch-content {
+                padding: 30px 20px;
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo con partículas animadas -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <a href="../index.html" class="nav-link">🏠 Inicio</a>
+        <a href="index.html" class="nav-link active">💎 Lean Canvas</a>
+        <a href="roadmap.html" class="nav-link">🗺️ Roadmap</a>
+        <a href="jobs-to-be-done.html" class="nav-link">👤 Cliente</a>
+        <a href="prueba-deseabilidad.html" class="nav-link">✨ Deseabilidad</a>
+        <a href="../gastronomía/index.html" class="nav-link" style="background: rgba(102, 126, 234, 0.3); border-color: rgba(102, 126, 234, 0.5);">🍽️ Gastronomía</a>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>💎 LEAN CANVAS - JOYERÍAS</h1>
+            <div class="subtitle">Tiendas online premium para joyerías que quieren verse realmente profesionales</div>
+        </div>
+
+        <div class="canvas-grid" id="canvasGrid">
+            <!-- Bloque PROBLEMA -->
+            <div class="canvas-block block-problema" onclick="openPitch('problema')">
+                <span class="block-icon">🚨</span>
+                <div class="block-title">PROBLEMAS</div>
+                <div class="block-content">
+                    <p><strong>1.</strong> Mi web se ve genérica y no refleja el nivel premium de mis productos</p>
+                    <p style="margin-top: 10px;"><strong>2.</strong> Mis competidores tienen webs visualmente superiores</p>
+                    <p style="margin-top: 10px;"><strong>3.</strong> Convertiría más ventas si las visitas de Instagram tuvieran experiencia visual premium</p>
+                </div>
+            </div>
+
+            <!-- Bloque ALTERNATIVAS -->
+            <div class="canvas-block block-alternativas" onclick="openPitch('alternativas')">
+                <span class="block-icon">🔄</span>
+                <div class="block-title">ALTERNATIVAS</div>
+                <div class="block-content">
+                    <p>• Seguir con Tiendanube genérico</p>
+                    <p>• Diseñador freelance (caro/lento)</p>
+                    <p>• Agencias desconocidas</p>
+                    <p>• Solo vender por Instagram</p>
+                </div>
+            </div>
+
+            <!-- Bloque SOLUCIÓN -->
+            <div class="canvas-block block-solucion" onclick="openPitch('solucion')">
+                <span class="block-icon">💡</span>
+                <div class="block-title">SOLUCIÓN</div>
+                <div class="block-content">
+                    <p><strong>1.</strong> Web 100% alineada al branding premium</p>
+                    <p style="margin-top: 10px;"><strong>2.</strong> Experiencia visual superior a 5 competidores</p>
+                    <p style="margin-top: 10px;"><strong>3.</strong> Optimización para Instagram con alto impacto visual</p>
+                </div>
+            </div>
+
+            <!-- Bloque PROPUESTA DE VALOR -->
+            <div class="canvas-block block-propuesta" onclick="openPitch('propuesta')">
+                <span class="block-icon">🎯</span>
+                <div class="block-title">PROPUESTA DE VALOR</div>
+                <div class="block-content">
+                    <p><strong>Pre-Headline:</strong> Para joyerías nuevas que quieren verse realmente premium online</p>
+                    <p style="margin-top: 15px;"><strong>Headline:</strong> Convertimos tu marca en la opción más confiable de tu categoría</p>
+                    <p style="margin-top: 15px;"><strong>Sub-Headline:</strong> Diseñamos una tienda online premium, basada en tu branding y optimizada para Instagram, para diferenciarte y convertir más visitas en ventas</p>
+                </div>
+            </div>
+
+            <!-- Bloque CLIENTE -->
+            <div class="canvas-block block-cliente" onclick="openPitch('cliente')">
+                <span class="block-icon">👥</span>
+                <div class="block-title">EARLY ADOPTER</div>
+                <div class="block-content">
+                    <p><strong>Joyerías con menos de 2 años</strong>, con branding profesional, que ya venden algo, usan Tiendanube y sienten que su web no refleja su valor premium</p>
+                    <p style="margin-top: 10px;">Pierden ventas frente a competidores con webs superiores</p>
+                </div>
+            </div>
+
+            <!-- Bloque VENTAJA INJUSTA -->
+            <div class="canvas-block block-ventaja" onclick="openPitch('ventaja')">
+                <span class="block-icon">🔥</span>
+                <div class="block-title">VENTAJA INJUSTA</div>
+                <div class="block-content">
+                    <p><strong>1.</strong> Acceso directo: capacidad de entrar a locales y vender presencialmente</p>
+                    <p style="margin-top: 10px;"><strong>2.</strong> Proceso propio en 7 días: análisis de 5 competidores + diseño premium + prototipos IA</p>
+                </div>
+            </div>
+
+            <!-- Bloque CANALES -->
+            <div class="canvas-block block-canales" onclick="openPitch('canales')">
+                <span class="block-icon">📢</span>
+                <div class="block-title">CANALES</div>
+                <div class="block-content">
+                    <p><strong>Visitas presenciales</strong> a joyerías encontradas en Google Maps</p>
+                    <p style="margin-top: 10px;">Conversación directa en el local</p>
+                    <p style="margin-top: 10px;">Mini demo rápida desde teléfono o laptop</p>
+                </div>
+            </div>
+
+            <!-- Bloque INGRESOS -->
+            <div class="canvas-block block-ingresos" onclick="openPitch('ingresos')">
+                <span class="block-icon">💰</span>
+                <div class="block-title">INGRESOS</div>
+                <div class="block-content">
+                    <p><strong>Suscripción anual todo incluido:</strong></p>
+                    <p class="metric">USD 500/año</p>
+                    <p style="margin-top: 10px; font-size: 0.9em;">Incluye: diseño premium, demo, ajustes iniciales, 3 reuniones, entrega en 7 días, mantenimiento liviano</p>
+                </div>
+            </div>
+
+            <!-- Bloque COSTOS -->
+            <div class="canvas-block block-costos" onclick="openPitch('costos')">
+                <span class="block-icon">💳</span>
+                <div class="block-title">COSTOS</div>
+                <div class="block-content">
+                    <p>• 8hs diseño</p>
+                    <p>• 1h demo</p>
+                    <p>• 4hs reuniones</p>
+                    <p>• 1 día recorrer locales</p>
+                    <p>• Transporte bajo</p>
+                    <p>• Google Cloud</p>
+                    <p>• Herramientas diseño</p>
+                </div>
+            </div>
+
+            <!-- Bloque MÉTRICAS -->
+            <div class="canvas-block block-metricas" onclick="openPitch('metricas')">
+                <span class="block-icon">📊</span>
+                <div class="block-title">MÉTRICAS CLAVE</div>
+                <div class="block-content">
+                    <p><strong>1.</strong> Conversión visitas → conversación</p>
+                    <p style="margin-top: 10px;"><strong>2.</strong> Conversión conversación → demo</p>
+                    <p style="margin-top: 10px;"><strong>3.</strong> Conversión demo → cierre</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para pitch -->
+        <div class="pitch-modal" id="pitchModal">
+            <div class="pitch-content" id="pitchContent">
+                <button class="close-modal" onclick="closePitch()">✕</button>
+                <div id="pitchText"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="team">💎 Joyerías Premium | Diciembre 2025</div>
+        </div>
+    </div>
+
+    <!-- Sección de texto plano -->
+    <div class="text-section">
+        <h2>Lean Canvas - Versión para copiar y pegar</h2>
+        <p>CLIENTE (SEGMENTOS + JTBD)
+Comprador: dueño de la joyería
+Usuario: encargado
+Champion: encargado
+
+JTBD: "Cuando veo que mis competidores venden más que yo y mi marca no se percibe tan confiable, quiero elevar la percepción premium de mi joyería para que más personas confíen en mi marca y elijan comprarme."
+
+Outcome esperado: aumentar la percepción premium, generar más confianza, mejorar conversión.
+
+EARLY ADOPTER
+Joyerías con menos de 2 años, con branding profesional, que ya venden algo, usan Tiendanube y sienten que su web no refleja su valor premium, perdiendo ventas frente a competidores con webs superiores.
+
+ALTERNATIVAS EXISTENTES
+Seguir con Tiendanube genérico; contratar diseñador freelance caro o lento; agencias desconocidas con costos dudosos; vender solo por Instagram.
+
+PROBLEMAS
+1) Mi web se ve genérica y no refleja el nivel premium de mis productos.
+2) Mis competidores tienen webs visualmente superiores.
+3) Convertiría más ventas si las visitas de Instagram tuvieran una experiencia visual más premium.
+
+SOLUCIÓN
+1) Web 100% alineada al branding premium.
+2) Experiencia visual claramente superior a 5 competidores directos.
+3) Optimización para visitas desde Instagram con foco en conversión y alto impacto visual.
+
+PROPUESTA DE VALOR
+Pre-Headline: Para joyerías nuevas que quieren verse realmente premium online.
+Headline: Convertimos tu marca en la opción más confiable de tu categoría.
+Sub-Headline: Diseñamos una tienda online premium, basada en tu branding y optimizada para Instagram, para diferenciarte y convertir más visitas en ventas.
+
+CANALES
+Visitas presenciales a joyerías encontradas en Google Maps; conversación directa en el local; mini demo rápida desde teléfono o laptop.
+
+FUENTES DE INGRESO
+Suscripción anual todo incluido: USD 500/año. Incluye diseño premium, demo, ajustes iniciales, 3 reuniones, entrega en 7 días, mantenimiento liviano.
+
+ESTRUCTURA DE COSTOS
+8hs diseño; 1h demo; 4hs reuniones; 1 día para recorrer locales; costo bajo de transporte; infraestructura Google Cloud baja; herramientas de diseño mínimas; hosting a cargo del cliente.
+
+MÉTRICAS CLAVE
+1) Conversión visitas → conversación.
+2) Conversión conversación → demo.
+3) Conversión demo → cierre.
+
+VENTAJA INJUSTA
+1) Acceso directo y confianza inmediata: capacidad de entrar a locales y vender presencialmente, canal imposible de replicar por agencias remotas.
+2) Proceso propio en 7 días: análisis de 5 competidores, diseño premium, copywriting y prototipos IA para entregar una web profesional en una semana con 3 rondas de feedback.</p>
+    </div>
+
+    <!-- Controles flotantes -->
+    <div class="controls">
+        <button class="btn" onclick="toggleAnimation()" title="Reiniciar">🔄</button>
+        <button class="btn" onclick="nextSlide()" title="Siguiente">→</button>
+    </div>
+
+    <script>
+        // Contenido de pitch para cada bloque
+        const pitchData = {
+            problema: {
+                icon: '🚨',
+                title: 'PROBLEMAS',
+                content: `
+                    <p>Los dueños de joyerías nuevas enfrentan tres problemas críticos que les impiden crecer:</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Problema #1:</strong> Mi web se ve genérica y no refleja el nivel premium de mis productos
+                    </div>
+                    
+                    <p>Las joyerías invierten en branding profesional, pero su web parece una plantilla básica de Tiendanube. Esto genera una desconexión entre su identidad de marca y su presencia online.</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Problema #2:</strong> Mis competidores tienen webs visualmente superiores
+                    </div>
+                    
+                    <p>Cuando un cliente potencial compara, la joyería pierde ventas simplemente porque su web se ve menos profesional y confiable que la competencia.</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Problema #3:</strong> Convertiría más si las visitas desde Instagram tuvieran una experiencia visual premium
+                    </div>
+                    
+                    <p>Instagram les trae tráfico, pero la web no convierte porque no cumple con las expectativas visuales que generó el feed de Instagram.</p>
+                `
+            },
+            alternativas: {
+                icon: '🔄',
+                title: 'ALTERNATIVAS EXISTENTES',
+                content: `
+                    <p>Las joyerías actualmente tienen cuatro opciones, todas con problemas:</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>1. Seguir con Tiendanube genérico</strong><br>
+                        Barato pero se ve básico. No refleja el valor premium de la marca.
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>2. Contratar diseñador freelance</strong><br>
+                        Caro (USD 2000+) y lento (meses). Sin garantía de resultado.
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>3. Agencias desconocidas</strong><br>
+                        Costos dudosos, procesos largos, falta de especialización en joyerías.
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>4. Vender solo por Instagram</strong><br>
+                        Limita el crecimiento, sin presencia web profesional para cerrar ventas.
+                    </div>
+                    
+                    <p>Ninguna de estas opciones ofrece una solución rápida, especializada y asequible para joyerías nuevas que necesitan verse premium YA.</p>
+                `
+            },
+            solucion: {
+                icon: '💡',
+                title: 'LA SOLUCIÓN',
+                content: `
+                    <p>Ofrecemos tres pilares fundamentales que transforman la presencia online de una joyería:</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>1. Web 100% alineada al branding premium</strong><br>
+                        Diseñamos cada detalle para que refleje la identidad de marca exacta que ya trabajaron: colores, tipografías, estilo visual.
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>2. Experiencia visual claramente superior a 5 competidores directos</strong><br>
+                        Analizamos a sus principales competidores y diseñamos una web que se destaca visualmente en su categoría.
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>3. Optimización para visitas desde Instagram con alto impacto visual</strong><br>
+                        La web está diseñada específicamente para convertir el tráfico de Instagram en ventas, manteniendo la coherencia visual.
+                    </div>
+                    
+                    <p><strong>Resultado:</strong> Una tienda online que finalmente refleja el valor premium de sus productos y convierte más visitantes en clientes.</p>
+                `
+            },
+            propuesta: {
+                icon: '🎯',
+                title: 'PROPUESTA DE VALOR',
+                content: `
+                    <p>Nuestra propuesta de valor está estructurada en tres niveles para comunicar claramente nuestro diferencial:</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Pre-Headline:</strong> Para joyerías nuevas que quieren verse realmente premium online
+                    </div>
+                    
+                    <p>Establecemos inmediatamente para quién es la solución: joyerías nuevas con aspiraciones premium.</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Headline:</strong> Convertimos tu marca en la opción más confiable de tu categoría
+                    </div>
+                    
+                    <p>El beneficio principal: transformamos percepción y confianza.</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Sub-Headline:</strong> Diseñamos una tienda online premium, basada en tu branding y optimizada para Instagram, para diferenciarte y convertir más visitas en ventas
+                    </div>
+                    
+                    <p>El cómo lo hacemos: diseño premium + branding coherente + optimización Instagram = diferenciación y conversión.</p>
+                    
+                    <p><strong>Promesa central:</strong> No solo hacemos una web bonita. Elevamos la percepción de tu marca para que más personas confíen y compren.</p>
+                `
+            },
+            cliente: {
+                icon: '👥',
+                title: 'EARLY ADOPTER',
+                content: `
+                    <p>Nuestro cliente ideal tiene un perfil muy específico:</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Joyerías con menos de 2 años de antigüedad</strong><br>
+                        Están en fase de crecimiento y consolidación de marca.
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Con branding profesional ya desarrollado</strong><br>
+                        Ya invirtieron en su identidad visual (logo, paleta, estilo).
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Que ya venden algo</strong><br>
+                        Tienen tracción inicial, no están empezando de cero.
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Usan Tiendanube</strong><br>
+                        Ya tienen una web, pero se ve genérica y básica.
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Sienten que su web no refleja su valor premium</strong><br>
+                        Tienen el problema consciente: saben que necesitan mejorar.
+                    </div>
+                    
+                    <p><strong>El dolor:</strong> Están perdiendo ventas frente a competidores con webs superiores. Saben que su web actual les está costando dinero.</p>
+                `
+            },
+            ventaja: {
+                icon: '🔥',
+                title: 'VENTAJA INJUSTA',
+                content: `
+                    <p>Tenemos dos ventajas que ninguna agencia remota puede replicar:</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>1. Acceso directo y confianza inmediata</strong><br>
+                        Capacidad de entrar a locales físicos y vender presencialmente. Este canal de distribución es imposible de replicar para agencias remotas que dependen de marketing digital.
+                    </div>
+                    
+                    <p>Mientras ellos esperan que los clientes lleguen por Google Ads o redes sociales, nosotros vamos directamente al local, generamos confianza cara a cara y cerramos la venta en el momento.</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>2. Proceso propio en 7 días</strong><br>
+                        Sistema único: análisis de 5 competidores + diseño premium + copywriting + prototipos con IA = web profesional en una semana con 3 rondas de feedback.
+                    </div>
+                    
+                    <p>Lo que a otros les toma 2-3 meses, nosotros lo entregamos en 7 días sin sacrificar calidad. Usamos IA estratégicamente para acelerar el proceso manteniendo alto estándar visual.</p>
+                    
+                    <p><strong>Resultado:</strong> Velocidad + calidad + acceso directo = combinación imbatible.</p>
+                `
+            },
+            canales: {
+                icon: '📢',
+                title: 'CANALES',
+                content: `
+                    <p>Nuestro canal de adquisición es simple, directo y altamente efectivo:</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Paso 1: Identificación en Google Maps</strong><br>
+                        Buscamos joyerías en zonas comerciales específicas usando Google Maps.
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Paso 2: Visita presencial al local</strong><br>
+                        Vamos directamente al local durante horario comercial.
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Paso 3: Conversación directa</strong><br>
+                        Hablamos con el dueño o encargado, identificamos el problema.
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Paso 4: Mini demo rápida</strong><br>
+                        Mostramos ejemplos desde el teléfono o laptop en el mismo local.
+                    </div>
+                    
+                    <p><strong>Ventaja del canal:</strong> Cero costo de marketing, alta tasa de conversión por confianza presencial, feedback inmediato, cierre de venta en el momento.</p>
+                    
+                    <p>Este canal presencial es nuestra mayor ventaja competitiva.</p>
+                `
+            },
+            ingresos: {
+                icon: '💰',
+                title: 'FUENTES DE INGRESO',
+                content: `
+                    <p>Ofrecemos un modelo de suscripción anual simple y predecible:</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Suscripción anual todo incluido: USD 500/año</strong>
+                    </div>
+                    
+                    <p><strong>Qué incluye:</strong></p>
+                    <ul class="item-list">
+                        <li>Diseño premium personalizado</li>
+                        <li>Demo presencial antes del cierre</li>
+                        <li>Ajustes iniciales ilimitados</li>
+                        <li>3 reuniones de feedback</li>
+                        <li>Entrega garantizada en 7 días</li>
+                        <li>Mantenimiento liviano durante el año</li>
+                    </ul>
+                    
+                    <p><strong>Por qué funciona:</strong></p>
+                    <p>→ Precio accesible para joyerías nuevas (vs USD 2000+ de freelancers)<br>
+                    → Pago anual asegura recurrencia y compromiso<br>
+                    → Todo incluido elimina sorpresas y fricciones<br>
+                    → Cliente sabe exactamente qué obtiene y cuánto paga</p>
+                    
+                    <p><strong>Meta:</strong> Con 40 clientes de pago anual = USD 20,000 de ingresos anuales recurrentes.</p>
+                `
+            },
+            costos: {
+                icon: '💳',
+                title: 'ESTRUCTURA DE COSTOS',
+                content: `
+                    <p>Mantenemos una estructura de costos ultra eficiente:</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Tiempo por cliente:</strong><br>
+                        • 8 horas de diseño<br>
+                        • 1 hora de demo presencial<br>
+                        • 4 horas de reuniones (3 sesiones)<br>
+                        • 1 día para recorrer locales y cerrar venta
+                    </div>
+                    
+                    <div class="pitch-highlight">
+                        <strong>Costos operativos:</strong><br>
+                        • Transporte local (bajo)<br>
+                        • Google Cloud (hosting y servicios)<br>
+                        • Herramientas de diseño (suscripciones mensuales)<br>
+                        • Hosting a cargo del cliente (no es nuestro costo)
+                    </div>
+                    
+                    <p><strong>Total estimado por cliente:</strong> ~14 horas de trabajo + costos operativos mínimos</p>
+                    
+                    <p><strong>Ventaja:</strong> Con USD 500/año por cliente y costos bajos, los márgenes son altísimos. Podemos escalar rápidamente sin aumentar costos fijos significativamente.</p>
+                `
+            },
+            metricas: {
+                icon: '📊',
+                title: 'MÉTRICAS CLAVE',
+                content: `
+                    <p>Medimos tres métricas fundamentales en nuestro embudo de ventas presencial:</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>1. Conversión visitas → conversación</strong><br>
+                        De cada 10 locales visitados, ¿en cuántos logramos tener una conversación real con el dueño o encargado?
+                    </div>
+                    
+                    <p>Esta métrica nos dice qué tan bien identificamos el perfil correcto y qué tan efectivo es nuestro approach inicial.</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>2. Conversión conversación → demo</strong><br>
+                        De cada 10 conversaciones, ¿en cuántas logramos mostrar la demo y generar interés genuino?
+                    </div>
+                    
+                    <p>Esta métrica valida si realmente entendemos el problema y si nuestra solución resuena con el early adopter.</p>
+                    
+                    <div class="pitch-highlight">
+                        <strong>3. Conversión demo → cierre</strong><br>
+                        De cada 10 demos, ¿cuántas se convierten en clientes de pago?
+                    </div>
+                    
+                    <p>Esta es la métrica más crítica: valida si nuestra propuesta de valor, precio y proceso convencen al cliente de comprar.</p>
+                    
+                    <p><strong>Objetivo:</strong> Optimizar cada paso del embudo hasta alcanzar 40 clientes en el primer año.</p>
+                `
+            }
+        };
+
+        // Abrir modal de pitch
+        function openPitch(type) {
+            const modal = document.getElementById('pitchModal');
+            const pitchText = document.getElementById('pitchText');
+            const data = pitchData[type];
+            
+            pitchText.innerHTML = `
+                <span class="pitch-icon">${data.icon}</span>
+                <h2>${data.title}</h2>
+                ${data.content}
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // Cerrar modal
+        function closePitch() {
+            const modal = document.getElementById('pitchModal');
+            modal.classList.remove('active');
+        }
+
+        // Cerrar con ESC o click fuera
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePitch();
+            }
+        });
+
+        document.getElementById('pitchModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePitch();
+            }
+        });
+
+        // Generar partículas animadas en el fondo
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDuration = Math.random() * 20 + 10 + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Reiniciar animaciones
+        function toggleAnimation() {
+            const blocks = document.querySelectorAll('.canvas-block');
+            blocks.forEach((block, index) => {
+                block.style.animation = 'none';
+                block.offsetHeight;
+                block.style.animation = `scaleIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards ${index * 0.2}s`;
+            });
+        }
+
+        // Sistema de presentación por slides
+        let currentSlide = 0;
+        const slides = ['block-problema', 'block-alternativas', 'block-solucion', 'block-propuesta', 'block-cliente', 'block-ventaja', 'block-canales', 'block-ingresos', 'block-costos', 'block-metricas'];
+
+        function nextSlide() {
+            const blocks = document.querySelectorAll('.canvas-block');
+            
+            // Reset todos
+            blocks.forEach(block => {
+                block.style.transform = 'scale(1)';
+                block.style.opacity = '1';
+                block.style.filter = 'none';
+            });
+
+            currentSlide = (currentSlide + 1) % (slides.length + 1);
+            
+            if (currentSlide === 0) {
+                // Mostrar todos
+                return;
+            }
+
+            // Highlight del slide actual
+            blocks.forEach(block => {
+                if (block.classList.contains(slides[currentSlide - 1])) {
+                    block.style.transform = 'scale(1.05)';
+                    block.style.filter = 'brightness(1.2)';
+                    block.style.zIndex = '10';
+                } else {
+                    block.style.opacity = '0.3';
+                    block.style.filter = 'blur(2px)';
+                }
+            });
+        }
+
+        // Atajos de teclado
+        document.addEventListener('keydown', function(e) {
+            const modalOpen = document.getElementById('pitchModal').classList.contains('active');
+            
+            if (e.key === 'r' || e.key === 'R') {
+                if (!modalOpen) toggleAnimation();
+            }
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (!modalOpen) {
+                    e.preventDefault();
+                    nextSlide();
+                }
+            }
+            if (e.key === 'ArrowLeft') {
+                if (!modalOpen) {
+                    e.preventDefault();
+                    currentSlide = Math.max(0, currentSlide - 2);
+                    nextSlide();
+                }
+            }
+        });
+
+        // Efecto de hover con cursor
+        document.addEventListener('mousemove', (e) => {
+            const blocks = document.querySelectorAll('.canvas-block');
+            blocks.forEach(block => {
+                const rect = block.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    const xPercent = (x / rect.width - 0.5) * 10;
+                    const yPercent = (y / rect.height - 0.5) * 10;
+                    block.style.transform = `perspective(1000px) rotateX(${-yPercent}deg) rotateY(${xPercent}deg) scale(1.02)`;
+                } else {
+                    block.style.transform = '';
+                }
+            });
+        });
+
+        // Click en título para modo fullscreen
+        document.querySelector('h1').addEventListener('click', function() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        // Inicializar
+        createParticles();
+    </script>
+</body>
+</html>
